@@ -2,6 +2,7 @@
 
 ## Part: 1
 - BigInteger
+  - [SPOJ](https://www.spoj.com/problems/tag/big-numbers)
 - Euclidean Algorithm
 - Extended Euclidean Algorithm
 - GCD
