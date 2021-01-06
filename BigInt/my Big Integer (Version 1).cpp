@@ -19,8 +19,8 @@ class BigInt{
     void operator = (const string); //first dgt is the sign/no sign
     void operator = (const ll);
     void operator = (const int);
-    //friend istream& operator>>(istream&,BigInt&);
-    //friend ostream& operator<<(ostream&, const BigInt&);
+    friend istream& operator>>(istream&,BigInt&);
+    friend ostream& operator<<(ostream&, const BigInt&);
     //BigInt friend operator + (BigInt,BigInt);
     //BigInt friend operator - (BigInt,BigInt);
     //BigInt friend operator * (BigInt,BigInt);
@@ -104,15 +104,35 @@ void BigInt::operator = (const int num){
 
 ///Int Input --End--
 
+///Input-Output Stream --Start--
+
+istream& operator>>(istream &stream,BigInt &v){
+    string s;
+    stream>>s;
+    v.read(s);
+    return stream;
+}
+
+ostream& operator<<(ostream &stream,BigInt &v){
+    if(v.isZero()){
+        stream<<'0';
+        return stream;
+    }
+    if(v.sign==false)stream<<'-';
+    for(ll i=v.dgt.size()-1;i>=0;i--)stream<<v.dgt[i];
+    return stream;
+}
+
+
+///Input-Output Stream --End--
 
 
 
 int main()
 {
-    ll num;
-    cin>>num;
-    BigInt a=num;
-    cout<<a.sign<<" "<<a.dgt<<endl;
-    cout<<a.isZero()<<endl;
+    BigInt a;
+    cin>>a;
+    cout<<a<<endl;
+    cout<<a<<endl;
     return 0;
 }
