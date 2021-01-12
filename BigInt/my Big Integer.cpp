@@ -13,7 +13,7 @@ class BigInt {
     void trim();
     bool isZero();
     void read(const string&);
-    BigInt(string); //first dgt is the sign/no sign /////BigInt b("98");
+    BigInt(string); //first dgt is the sign/no sign
     BigInt(ll);
     BigInt(int);
     void operator = (const string); //first dgt is the sign/no sign
@@ -25,6 +25,7 @@ class BigInt {
     BigInt friend operator - (BigInt,BigInt);
     BigInt friend operator * (BigInt,BigInt);
     BigInt friend operator / (BigInt,ll);
+    ll friend operator % (BigInt,ll);
 };
 
 ///Must have functions --Start--
@@ -263,7 +264,7 @@ string dgt_mul(string a, string b) {
 
 BigInt operator * (BigInt a,BigInt b) {
     BigInt mul;
-    if(a.sign==b.sign)mul.sign=a.sign;
+    if(a.sign==b.sign)mul.sign=true;
     else mul.sign=false;
     mul.dgt=dgt_mul(a.dgt,b.dgt);
     mul.trim();
@@ -274,21 +275,22 @@ BigInt operator * (BigInt a,BigInt b) {
 
 ///BigInt Divition --Start--
 
-string dgt_div(string a, ll b) {
+pair<string,ll> dgt_div(string a, ll b) {
     reverse(a.begin(),a.end());
-    ll alen=a.size(),tmp=0,idx=0;
+    ll alen=a.size(),idx=0;
+    unsigned long long tmp=0;
     while(tmp<b && idx<alen){
 		tmp=(tmp*10)+a[idx++]-'0';
 	}
     string ans="";
-	while(tmp>=b){
+	while(idx<=alen){
 		ans+=(tmp/b)+'0';
 		tmp%=b;
 		if(idx>=alen){break;}
 		tmp=(tmp*10)+a[idx++]-'0';
 	}
 	reverse(ans.begin(),ans.end());
-	return ans;
+	return {ans,(ll)tmp};
 }
 
 BigInt operator / (BigInt a,ll b) {
@@ -306,12 +308,28 @@ BigInt operator / (BigInt a,ll b) {
     if((a.sign==true&&b>=0)||(a.sign==false&&b<0))div.sign=true;
     else div.sign=false;
     b=abs(b);
-    div.dgt=dgt_div(a.dgt,b);
+    pair<string,ll>div_mod=dgt_div(a.dgt,b);
+    div.dgt=div_mod.first;
     div.trim();
     return div;
 }
 
-///Problem End.......................
+ll operator % (BigInt a,ll b) {
+    if(b==0) {
+        cout<<"Invalid Division: Can't divide by zero\n";
+        return 0;
+    }
+    if(a.isZero()) {
+        return 0;
+    }
+    bool sgn=(b>=0);
+    pair<string,ll>div_mod=dgt_div(a.dgt,abs(b));
+    ll md=div_mod.second;
+    if((a.sign==true&&b>=0)||(a.sign==false&&b<0)){}
+    else md=(abs(b)-md);
+    if(!sgn)md=md*(-1);
+    return md;
+}
 
 ///Bigint Divition --End--
 
@@ -322,9 +340,9 @@ int main() {
     ll b;
     cin>>a;
     cin>>b;
-    BigInt div;
-    div=a/b;
-    cout<<div<<endl;
+    ll mod;
+    mod=a%b;
+    cout<<mod<<endl;
     return 0;
 }
 
